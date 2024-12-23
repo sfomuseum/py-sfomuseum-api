@@ -5,7 +5,7 @@ import base64
 import json
 import logging
 
-from request import encode_multipart_formdata, encode_urlencode
+# from request import encode_multipart_formdata, encode_urlencode
 
 class OAuth2:
 
