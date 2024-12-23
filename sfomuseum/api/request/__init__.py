@@ -1,4 +1,4 @@
-import urllib
+import urllib.parse
 import mimetypes
 
 def encode_multipart_formdata(args):
@@ -34,7 +34,7 @@ def encode_multipart_formdata(args):
 	return (headers, body)
 
 def encode_urlencode(args):
-	return ({"Content-type": "application/x-www-form-urlencoded"},urllib.urlencode(args))
+	return ({"Content-type": "application/x-www-form-urlencoded"}, urllib.parse.urlencode(args))
 
 def get_content_type(filename):
 	return mimetypes.guess_type(filename)[0] or 'application/octet-stream'

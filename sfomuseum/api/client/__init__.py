@@ -5,11 +5,11 @@ import base64
 import json
 import logging
 
-# from request import encode_multipart_formdata, encode_urlencode
+from sfomuseum.api.request import encode_multipart_formdata, encode_urlencode
 
-class OAuth2:
+class OAuth2Client:
 
-    def __init__(self, access_token, hostname="https://api.sfomuseum.org", endpoint="/rest"):
+    def __init__(self, access_token, hostname="api.sfomuseum.org", endpoint="/rest"):
 
         self.access_token = access_token
 
@@ -21,21 +21,36 @@ class OAuth2:
     def set_auth(self, kwargs):
         kwargs["access_token"] = self.access_token
         
-    def execute_method(self, method, kwargs, encode=encode_urlencode):
-
-        logging.debug("calling %s with args %s" % (method, kwargs))
-
-        kwargs['method'] = method
+    def execute_method(self, verb, kwargs, encode=encode_urlencode):
 
         self.set_auth(kwargs)
-
-        (headers, body) = encode(kwargs)
 
         url = self.endpoint
         logging.debug("calling %s" % url)
 
         conn = http.client.HTTPSConnection(self.hostname)
-        conn.request('POST', url, body, headers)
+        
+        match verb:
+            case "GET":
+
+                query_string = urllib.parse.urlencode(kwargs)
+                path = self.endpoint + "?" + query_string
+
+                conn.request("GET", path)
+
+            case "POST":
+
+                body = urllib.parse.urlencode(kwargs)
+
+                headers = {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Length": str(len(body))
+                }
+                
+                conn.request("POST", self.endpoint, body=body, headers=headers)
+                
+            case _:
+                raise Exception("Invalid or unsupported verb")
 
         rsp = conn.getresponse()
         body = rsp.read()
@@ -49,7 +64,7 @@ class OAuth2:
             raise Exception(e)
 
         # check status here...
-
+        
         return data
 
     def execute_method_paginated(self, method, kwargs, cb, encode=encode_urlencode):
@@ -131,3 +146,4 @@ if __name__ == '__main__':
     # Sample API call goes here
 
     sys.exit()
+
