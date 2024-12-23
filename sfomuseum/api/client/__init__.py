@@ -1,11 +1,8 @@
 import urllib
 from urllib.parse import urlparse
 import http.client
-import base64
 import json
 import logging
-
-from sfomuseum.api.request import encode_multipart_formdata, encode_urlencode
 
 class OAuth2Client:
 
@@ -21,7 +18,7 @@ class OAuth2Client:
     def set_auth(self, kwargs):
         kwargs["access_token"] = self.access_token
         
-    def execute_method(self, verb, kwargs, encode=encode_urlencode):
+    def execute_method(self, verb, kwargs):
 
         self.set_auth(kwargs)
 
@@ -67,11 +64,11 @@ class OAuth2Client:
         
         return data
 
-    def execute_method_paginated(self, method, kwargs, cb, encode=encode_urlencode):
+    def execute_method_paginated(self, verb, kwargs, cb):
 
         while True:
             
-            rsp = self.execute_method(method, kwargs, encode)
+            rsp = self.execute_method(verb, kwargs)
 
             if not cb(rsp):
                 logging.warning("execute_method_paginated callback did not return True, halting iteration")
@@ -105,45 +102,4 @@ class OAuth2Client:
             
             for k, v in tmp.items():
                 kwargs[k] = v[0]
-
-            
-if __name__ == '__main__':
-
-    import sys
-    import pprint
-    import time
-    import optparse
-
-    parser = optparse.OptionParser(usage="python api.py --host <HOST> --endpoint <ENDPOINT> --access-token <ACCESS TOKEN>")
-
-    # sudo make me read a config file...
-
-    parser.add_option('--access-token', dest='access_token',
-                        help='Your Flamework API access token',
-                        action='store')
-
-    parser.add_option('--host', dest='host',
-                        help='Your Flamework API host',
-                        action='store')
-
-    parser.add_option('--endpoint', dest='endpoint',
-                        help='Your Flamework API endpoint',
-                        action='store')
-
-    parser.add_option("-v", "--verbose", dest="verbose",
-                      help="enable chatty logging; default is false", 
-                      action="store_true", default=False)
-
-    options, args = parser.parse_args()
-    
-    if options.verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
-
-    api = OAuth2(options.access_token)
-
-    # Sample API call goes here
-
-    sys.exit()
 
