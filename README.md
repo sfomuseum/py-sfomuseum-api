@@ -37,7 +37,7 @@ This package does not define any specific mappings for individual API responses.
 
 ## Tools
 
-By default this package installs a command line `sfomuseum-api` for interacting with the SFO Museum API.
+By default this package installs a command line `sfomuseum-api` for interacting with the SFO Museum API. It will parse and dump the JSON-encoded API responses to STDOUT.
 
 ### sfomuseum-api
 
