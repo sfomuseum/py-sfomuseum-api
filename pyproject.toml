@@ -1,3 +1,24 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "py-sfomuseum-api"
+version = "0.0.2"
+authors = [
+  { name="SFO Museum", email="info@sfomuseum.org" },
+]
+description = "Python package for working with the SFO Museum API"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/sfomuseum/py-sfomuseum-api"
+Issues = "https://github.com/sfomuseum/py-sfomuseum-api/issues"
+
+[project.entry-points.console_scripts]
+sfomuseum-api = "sfomuseum.api.core:main"

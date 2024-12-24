@@ -1,10 +1,12 @@
-#!/usr/bin/env python3
+# import sys
+# import os
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import argparse
 import json
 from sfomuseum.api.client import OAuth2Client
 
-def main():
+def main_function():
 
     parser = argparse.ArgumentParser(description="Accept multiple key-value pairs.")
     
@@ -29,12 +31,6 @@ def main():
     )
     
     args = parser.parse_args()
-
-    if args.access_token == "":
-        raise Exception("Missing --access-token flag")
-
-    if not args.param:
-        raise Exception("Missing one or more --param flags")
     
     kwargs = {}
     
@@ -49,12 +45,6 @@ def main():
     cl = OAuth2Client(args.access_token)
     rsp = cl.execute_method(args.verb, kwargs)
 
-    try:
-        data = json.load(rsp)
-        print(json.dumps(data))
-    except Exception(e):
-        raise Exception(e)
-    
-if __name__ == "__main__":    
-    main()
+    print(json.dumps(rsp))
+
     

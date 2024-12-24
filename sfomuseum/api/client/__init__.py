@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 import http.client
 import json
 import logging
+import io
 
 class OAuth2Client:
 
@@ -50,19 +51,15 @@ class OAuth2Client:
                 raise Exception("Invalid or unsupported verb")
 
         rsp = conn.getresponse()
+
+        if rsp.status != 200:
+            conn.close()
+            raise Exception(f"API request failed to execute {rsp.status} : {rsp.code}")
+
         body = rsp.read()
+        conn.close()
 
-        logging.debug("response is %s" % body)
-
-        try:
-            data = json.loads(body)
-        except Exception(e):
-            logging.error(e)
-            raise Exception(e)
-
-        # check status here...
-        
-        return data
+        return io.StringIO(body.decode('utf-8'))
 
     def execute_method_paginated(self, verb, kwargs, cb):
 
