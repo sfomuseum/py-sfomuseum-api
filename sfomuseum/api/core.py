@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # import sys
 # import os
 # sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -8,7 +6,7 @@ import argparse
 import json
 from sfomuseum.api.client import OAuth2Client
 
-if __name__ == "__main__":
+def main_function():
 
     parser = argparse.ArgumentParser(description="Accept multiple key-value pairs.")
     
@@ -48,3 +46,5 @@ if __name__ == "__main__":
     rsp = cl.execute_method(args.verb, kwargs)
 
     print(json.dumps(rsp))
+
+    
